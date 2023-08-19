@@ -1,0 +1,55 @@
+/* styles.css */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+.pokemon-container {
+  background-color: #13a0a5;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  overflow: auto;
+  max-width: 1200px; 
+  margin: 5px auto; 
+  padding: 20px; 
+}
+
+.pokemon-card {
+  width: 30%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 7px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.pokemon-card img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 0 auto 16px; /* Center the image within the card */
+}
+
+.pokemon-info h2 {
+  margin-top: 0;
+}
+
+.pokemon-info p {
+  margin: 4px 0;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .pokemon-card {
+    width: calc(50% - 20px); /* Two cards in one row for smaller screens */
+  }
+}
+
+/* Further adjustments for even smaller screens */
+@media (max-width: 480px) {
+  .pokemon-card {
+    width: calc(100% - 20px); /* One card per row for the smallest screens */
+  }
+}

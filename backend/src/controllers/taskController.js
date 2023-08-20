@@ -4,14 +4,14 @@ const createtask = async (req, res) => {
   try {
     data = req.body;
     const { userId, title, description } = data;
-
-    if (!userId || !title || !description) {
+    let user = req.user._id;
+    if (!title || !description) {
       return res
         .status(400)
         .send({ msg: "All fields are required", data: null });
     }
     const savedTask = await task.create({
-      userId: userId,
+      userId: user,
       title: title,
       description: description,
     });
@@ -66,10 +66,10 @@ const updatetaskById = async (req, res) => {
   try {
     const { userId, title, description } = req.body;
     const taskId = req.params.id;
-
+    let user = req.user;
     const updatedTask = await task.findByIdAndUpdate(
       taskId,
-      { userId, title, description },
+      { userId: user._id, title, description },
       { new: true }
     );
 

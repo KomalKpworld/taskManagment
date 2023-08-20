@@ -20,6 +20,11 @@ module.exports = async (req, res, next) => {
     let user = await User.findOne({
       _id: decodedData?.userId,
     });
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+
+if (decodedData.exp < currentTimestamp) {
+  return res.status(400).send({error: "token is expire"})
+}
 
     if (!user) {
       return res.status(401).send({ error: "Authentication Failed!" });
@@ -29,6 +34,6 @@ module.exports = async (req, res, next) => {
     next();
   } catch (error) {
     console.error(error);
-    return res.status(500).send({ error: "Internal Server Error" });
+    return res.status(500).send({ error: "Authentication error" });
   }
 };

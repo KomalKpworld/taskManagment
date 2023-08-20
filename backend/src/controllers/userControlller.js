@@ -53,42 +53,47 @@ const login = async (req, res) => {
 const userUpdate = async (req, res) => {
   try {
     let profile;
-    if (req.files.profile) {
+    let updatedUser
+    if (req.files == null) {
+      updatedUser = await User.findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: {
+            email: req.body.email,
+            username: req.body.username,
+          profile: req.body.profile
+          },
+        },
+        { new: true }
+      );
+      return res.status(200).send(updatedUser);
+    }
+    if (req.files?.profile) {
       await cloudinary.uploader.upload(
         req.files.profile.tempFilePath,
         async (err, result) => {
           profile = result.url;
         }
       );
-    }
-    if (!req.files) {
-      const updatedUser = await User.findByIdAndUpdate(
+      updatedUser = await User.findByIdAndUpdate(
         req.params.id,
         {
           $set: {
             email: req.body.email,
             username: req.body.username,
-          
+            profile: profile,
           },
         },
         { new: true }
       );
+      return res.status(200).send(updatedUser);
     }
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
-      {
-        $set: {
-          email: req.body.email,
-          username: req.body.username,
-          profile: profile,
-        },
-      },
-      { new: true }
-    );
+   
+   
     if (!updatedUser) {
       return res.status(404).send({ error: "User not found" });
     }
-    return res.status(200).send(updatedUser);
+   
   } catch (error) {
     console.error("Updating user error:", error);
     return res.status(500).send({ error: "Server error" });
@@ -98,7 +103,7 @@ const userUpdate = async (req, res) => {
 const userDelete= async function (req, res) {
   try {
     let id = req.params.id;
-    let findUser = await userModel.findByIdAndDelete(id);
+    let findUser = await User.findByIdAndDelete(id);
     if (findUser) {
       return res
         .status(200)

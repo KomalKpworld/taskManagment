@@ -42,7 +42,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <Navbar />
+    
       <div className="container mx-auto py-8">
         <h2 className="text-3xl font-semibold mb-4">User Profile</h2>
 

@@ -3,22 +3,27 @@ const geolib = require('geolib');
 const router = express.Router();
 const Location = require('../models/locationmodel'); 
 
+router.post("/match-locations", async (req, res) => {
+  const userLocation = req.body.userLocation; 
+  const maxDistance = 10; 
 
-router.get('/match-location', async (req, res) => {
-  const { latitude, longitude } = req.query; 
- 
-  const allLocations = await Location.find();
+  try {
+    const matchingLocations = await Location.find({
+      $where: function () {
+        return calculateDistance(
+          userLocation.latitude,
+          userLocation.longitude,
+          this.latitude,
+          this.longitude
+        ) <= maxDistance;
+      },
+    });
 
- 
-  const matchingLocations = allLocations.filter(location => {
-    const distance = geolib.getDistance(
-      { latitude: parseFloat(latitude), longitude: parseFloat(longitude) },
-      { latitude: location.latitude, longitude: location.longitude }
-    );
-    return distance <= 1000; 
-  });
-
-  res.send(matchingLocations);
+    res.json({ matchingLocations });
+  } catch (error) {
+    res.status(500).json({ error: "An error occurred." });
+  }
 });
+
 
 module.exports = router;
